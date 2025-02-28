@@ -1,7 +1,6 @@
 import React from 'react';
 import Box from "@mui/material/Box";
 import { useTheme } from '@mui/material/styles';
-import BackgroundImage from '../../assets/images/header.jpg';
 
 const Hero: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const theme = useTheme();
@@ -12,7 +11,7 @@ const Hero: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         height: '150px',
         justifyContent: 'space-between',
         backgroundColor: theme.palette.primary.main,
-        backgroundImage: `url(${theme?.banner?.image || BackgroundImage})`,
+        backgroundImage: `url(${theme?.banner?.image})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
