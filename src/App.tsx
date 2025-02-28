@@ -19,6 +19,7 @@ const App: React.FC = () => {
       const dynamicTheme = createDynamicTheme(data);
       setTheme(dynamicTheme);
       dispatch(setup(data));
+      document.title = data.name;
     };
     loadTheme();
   }, []);
