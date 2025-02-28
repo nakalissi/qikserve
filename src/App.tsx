@@ -22,7 +22,7 @@ const App: React.FC = () => {
       document.title = data.name;
     };
     loadTheme();
-  }, []);
+  }, [dispatch]);
 
   if (!theme) {
     return (
