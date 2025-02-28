@@ -62,7 +62,7 @@ const CustomizedDialog: React.FC<{
     if (!isOpen) {
       setValue('');
     }
-  }, [value]);
+  }, [isOpen]);
 
   return (
     <>
