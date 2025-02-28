@@ -3,20 +3,19 @@ import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import MenuItem from "@mui/material/MenuItem";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import Hero from "../../atoms/Hero";
 
-function Header() {
+const Header: React.FC = () => {
+  const [activePage, setActivePage] = useState<string>('MENU');
+  let [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
 
-  let [anchorElNav, setAnchorElNav] = useState(null);
-
-  const handleOpenNavMenu = (event) => {
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
@@ -35,7 +34,7 @@ function Header() {
           {pages.map((page) => (
             <Button
               key={page}
-              onClick={handleCloseNavMenu}
+              onClick={handleOpenNavMenu}
               sx={{ 
                 my: 2,
                 width: '232px',
@@ -47,7 +46,7 @@ function Header() {
                 borderRadius: 0,
                 borderBottomWidth: 3,
                 borderBottomStyle: 'solid', 
-                borderBottomColor: 'transparent',
+                borderBottomColor: activePage === page ? 'white' : 'transparent',
                 '&:hover': {
                   borderBottomColor: 'white',
                 }
