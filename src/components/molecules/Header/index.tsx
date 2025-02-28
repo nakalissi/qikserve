@@ -12,7 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Hero from "../../atoms/Hero";
 
 const Header: React.FC = () => {
-  const [activePage, setActivePage] = useState<string>('MENU');
+  const [activePage] = useState<string>('MENU');
   let [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {

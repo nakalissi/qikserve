@@ -9,12 +9,13 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import { Cancel } from '@mui/icons-material';
-import { ItemProps, ModifiersProps } from '../../interfaces/types.interface';
+import { AddCircle, Cancel, RemoveCircle } from '@mui/icons-material';
+import { CartProps, ItemProps, ModifiersProps } from '../../interfaces/types.interface';
 import { addItem } from '../../redux/cart';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CircularProgress from '@mui/material/CircularProgress';
 import { FormControl, RadioGroup, FormControlLabel, Radio, Box } from '@mui/material';
+import { RootState } from '../../redux/store';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -36,6 +37,8 @@ const CustomizedDialog: React.FC<{
 }) => {
   const dispatch = useDispatch();
   const [value, setValue] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const cartItems: CartProps[] = useSelector((state: RootState) => state.cart.items);
 
   const handleAddItem = (item: ItemProps) => {
     
@@ -46,7 +49,7 @@ const CustomizedDialog: React.FC<{
     dispatch(addItem({
       id: item.id,
       name: item.name,
-      quantity: 1,
+      quantity: quantity,
       price: modifierItem ? modifierItem.price : item.price,
       description: modifierItem ? modifierItem.name : '',
     }));
@@ -58,9 +61,17 @@ const CustomizedDialog: React.FC<{
     setValue((event.target as HTMLInputElement).value);
   };
 
+  const handleQuantity = (qty: number) => {
+    setQuantity((oldValue) => {
+      const newValue = oldValue + qty;
+      return newValue < 1 ? 1 : newValue;
+    });
+  }
+
   useEffect(() => {
-    if (!isOpen) {
+    return () => {
       setValue('');
+      setQuantity(1);
     }
   }, [isOpen]);
 
@@ -121,16 +132,24 @@ const CustomizedDialog: React.FC<{
                       ))}
                     </RadioGroup>
                   </FormControl>
-                  
                 </React.Fragment>
               ))}
+              <Box sx={{ mt: 2, width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                <IconButton color="primary" size="small" onClick={() => handleQuantity(1)}>
+                  <AddCircle fontSize="inherit" />
+                </IconButton>
+                <Typography sx={{ marginX: 1 }}>{quantity}</Typography>
+                <IconButton color="primary" aria-label="remove" size="small" onClick={() => handleQuantity(-1)}>
+                  <RemoveCircle fontSize="inherit" />
+                </IconButton>
+              </Box>
             </CardContent>
             <CardActions>
               <Button color="primary" variant="contained" 
-                sx={{ borderRadius: 6, mt: 2 }} fullWidth 
+                sx={{ borderRadius: 6}} fullWidth 
                 onClick={() => handleAddItem(content)}
               >
-                Add to Order • {content.price.toFixed(2)}
+                Add to Order • {(content.price * quantity).toFixed(2)}
               </Button>
             </CardActions>
           </Card>
