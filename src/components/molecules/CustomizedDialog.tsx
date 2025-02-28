@@ -10,12 +10,11 @@ import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import { AddCircle, Cancel, RemoveCircle } from '@mui/icons-material';
-import { CartProps, ItemProps, ModifiersProps } from '../../interfaces/types.interface';
+import { ItemProps, ModifiersProps } from '../../interfaces/types.interface';
 import { addItem } from '../../redux/cart';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import CircularProgress from '@mui/material/CircularProgress';
 import { FormControl, RadioGroup, FormControlLabel, Radio, Box } from '@mui/material';
-import { RootState } from '../../redux/store';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -38,7 +37,6 @@ const CustomizedDialog: React.FC<{
   const dispatch = useDispatch();
   const [value, setValue] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const cartItems: CartProps[] = useSelector((state: RootState) => state.cart.items);
 
   const handleAddItem = (item: ItemProps) => {
     
