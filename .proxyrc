@@ -1,0 +1,6 @@
+{
+  "/challenge": {
+    "target": "https://cdn-dev.preoday.com",
+    "changeOrigin": true
+  }
+}
