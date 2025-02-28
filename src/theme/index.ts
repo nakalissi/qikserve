@@ -1,14 +1,46 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, Theme } from '@mui/material/styles';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#4F372F',
-    },
-    secondary: {
-      main: '#ffffff',
-    },
-  },
-});
+declare module '@mui/material/styles' {
+  interface Theme {
+    banner: {
+      image: string;
+    };
+  }
+  interface ThemeOptions {
+    banner?: {
+      image?: string;
+    };
+  }
+}
 
-export default theme;
+const createDynamicTheme = (theme: any): Theme => {
+  return createTheme({
+    palette: {
+      primary: {
+        main: theme.webSettings.primaryColour || '#4F372F',
+      },
+      secondary: {
+        light: '#F8F9FA',
+        main: theme.webSettings.backgroundColour || '#ffffff',
+      },
+      background: {
+        paper: '#F8F9FA',
+        default: '#EEEEEE',
+      },
+    },
+    banner: {
+      image: theme.webSettings.bannerImage,
+    },
+    typography: {
+      allVariants: {
+        fontFamily: [
+          'Roboto',
+          'sans-serif',
+        ].join(','),
+        color: '#464646',
+      },
+    },
+  });
+};
+
+export default createDynamicTheme;
