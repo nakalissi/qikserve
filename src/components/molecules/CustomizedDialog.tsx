@@ -1,56 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import { AddCircle, Cancel, RemoveCircle } from '@mui/icons-material';
-import { ItemProps, ModifiersProps } from '../../interfaces/types.interface';
-import { addItem } from '../../redux/cart';
-import { useDispatch } from 'react-redux';
-import CircularProgress from '@mui/material/CircularProgress';
-import { FormControl, RadioGroup, FormControlLabel, Radio, Box } from '@mui/material';
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import { AddCircle, Cancel, RemoveCircle } from "@mui/icons-material";
+import { ItemProps, ModifiersProps } from "../../interfaces/types.interface";
+import { addItem } from "../../redux/cart";
+import { useDispatch } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
+import {
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Box,
+} from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
+  "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
-  '& .MuiDialogActions-root': {
+  "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
   },
 }));
 
-const CustomizedDialog: React.FC<{ 
-  isOpen: boolean, 
-  content: ItemProps | null, 
-  handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void,
-}> = ({ 
-  isOpen, 
-  content, 
-  handleClose,
-}) => {
+const CustomizedDialog: React.FC<{
+  isOpen: boolean;
+  content: ItemProps | null;
+  handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}> = ({ isOpen, content, handleClose }) => {
   const dispatch = useDispatch();
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(
+    content?.modifiers?.[0]?.items?.[0]?.id || ""
+  );
   const [quantity, setQuantity] = useState(1);
 
   const handleAddItem = (item: ItemProps) => {
-    
-    const modifierItem = item.modifiers?.flatMap((modifier: ModifiersProps) => 
-      modifier.items.filter((item: { id: string }) => item.id.toString() === value)
+    const modifierItem = item.modifiers?.flatMap((modifier: ModifiersProps) =>
+      modifier.items.filter(
+        (item: { id: string }) => item.id.toString() === value
+      )
     )[0];
-    
-    dispatch(addItem({
-      id: item.id,
-      name: item.name,
-      quantity: quantity,
-      price: modifierItem ? modifierItem.price : item.price,
-      description: modifierItem ? modifierItem.name : '',
-    }));
+
+    dispatch(
+      addItem({
+        id: item.id,
+        name: item.name,
+        quantity: quantity,
+        price: modifierItem ? modifierItem.price : item.price,
+        description: modifierItem ? modifierItem.name : "",
+      })
+    );
 
     handleClose({} as React.MouseEvent<HTMLButtonElement>);
   };
@@ -64,13 +71,13 @@ const CustomizedDialog: React.FC<{
       const newValue = oldValue + qty;
       return newValue < 1 ? 1 : newValue;
     });
-  }
+  };
 
   useEffect(() => {
     return () => {
-      setValue('');
+      setValue("");
       setQuantity(1);
-    }
+    };
   }, [isOpen]);
 
   return (
@@ -80,24 +87,25 @@ const CustomizedDialog: React.FC<{
         aria-labelledby="customized-dialog-title"
         open={isOpen}
       >
-        {!content ? <CircularProgress />
-        : (
-          <Card sx={{ width: '480px', maxWidth: '100%', boxShadow: 'none' }}>
-            {content.images && content.images.length && 
+        {!content ? (
+          <CircularProgress />
+        ) : (
+          <Card sx={{ width: "480px", maxWidth: "100%", boxShadow: "none" }}>
+            {content.images && content.images.length && (
               <CardMedia
                 sx={{ height: 140 }}
                 image={content.images[0].image}
                 title={content.name}
               />
-            }
+            )}
             <IconButton
               aria-label="close"
               onClick={handleClose}
               sx={() => ({
-                position: 'absolute',
+                position: "absolute",
                 right: 8,
                 top: 8,
-                color: 'background.paper',
+                color: "background.paper",
               })}
             >
               <Cancel />
@@ -106,45 +114,97 @@ const CustomizedDialog: React.FC<{
               <Typography fontWeight="bold" fontSize={20}>
                 {content.name}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 {content.description}
               </Typography>
-              {content?.modifiers && content?.modifiers.map((modifier: ModifiersProps, index: number) => (
-                <React.Fragment key={index}>
-                  <Box sx={{ backgroundColor: 'background.default', padding: 2, borderRadius: 3, my: 2 }}>
-                    <Typography variant="body2" fontWeight="bold">
-                      {modifier.name}
-                    </Typography>
-                    <Typography variant="body2">
-                      Select {modifier.minChoices} option
-                    </Typography>
-                  </Box>
-                  <FormControl fullWidth>
-                    <RadioGroup
-                      name="controlled-radio-buttons-group"
-                      onChange={handleChange}
-                      defaultValue={value}
-                    >
-                      {Array.isArray(modifier.items) && modifier.items.map((item: { id: string; name: string; price: number }, index: number) => (
-                        <FormControlLabel key={index} value={item.id} sx={{ ml: 0, display: 'flex', justifyContent: 'space-between' }} control={<Radio size="small" />} label={item.name} labelPlacement="start" />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                </React.Fragment>
-              ))}
-              <Box sx={{ mt: 2, width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <IconButton color="primary" size="small" onClick={() => handleQuantity(1)}>
+              {content?.modifiers &&
+                content?.modifiers.map(
+                  (modifier: ModifiersProps, index: number) => (
+                    <React.Fragment key={index}>
+                      <Box
+                        sx={{
+                          backgroundColor: "background.default",
+                          padding: 2,
+                          borderRadius: 3,
+                          my: 2,
+                        }}
+                      >
+                        <Typography variant="body2" fontWeight="bold">
+                          {modifier.name}
+                        </Typography>
+                        <Typography variant="body2">
+                          Select {modifier.minChoices} option
+                        </Typography>
+                      </Box>
+                      <FormControl fullWidth>
+                        <RadioGroup
+                          name="controlled-radio-buttons-group"
+                          onChange={handleChange}
+                          defaultValue={value}
+                        >
+                          {Array.isArray(modifier.items) &&
+                            modifier.items.map(
+                              (
+                                item: {
+                                  id: string;
+                                  name: string;
+                                  price: number;
+                                },
+                                index: number
+                              ) => (
+                                <FormControlLabel
+                                  key={index}
+                                  value={item.id}
+                                  sx={{
+                                    ml: 0,
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                  }}
+                                  control={<Radio size="small" />}
+                                  label={item.name}
+                                  labelPlacement="start"
+                                />
+                              )
+                            )}
+                        </RadioGroup>
+                      </FormControl>
+                    </React.Fragment>
+                  )
+                )}
+              <Box
+                sx={{
+                  mt: 2,
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <IconButton
+                  color="primary"
+                  size="small"
+                  onClick={() => handleQuantity(1)}
+                >
                   <AddCircle fontSize="inherit" />
                 </IconButton>
                 <Typography sx={{ marginX: 1 }}>{quantity}</Typography>
-                <IconButton color="primary" aria-label="remove" size="small" onClick={() => handleQuantity(-1)}>
+                <IconButton
+                  color="primary"
+                  aria-label="remove"
+                  size="small"
+                  onClick={() => handleQuantity(-1)}
+                >
                   <RemoveCircle fontSize="inherit" />
                 </IconButton>
               </Box>
             </CardContent>
             <CardActions>
-              <Button color="primary" variant="contained" 
-                sx={{ borderRadius: 6}} fullWidth 
+              <Button
+                color="primary"
+                variant="contained"
+                sx={{ borderRadius: 6 }}
+                fullWidth
                 onClick={() => handleAddItem(content)}
               >
                 Add to Order • {(content.price * quantity).toFixed(2)}
@@ -155,6 +215,6 @@ const CustomizedDialog: React.FC<{
       </BootstrapDialog>
     </>
   );
-}
+};
 
 export default CustomizedDialog;
