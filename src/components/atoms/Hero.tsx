@@ -2,7 +2,7 @@ import React from 'react';
 import Box from "@mui/material/Box";
 import { useTheme } from '@mui/material/styles';
 
-const Hero: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Hero: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const theme = useTheme();
   
   return (
