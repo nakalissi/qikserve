@@ -25,6 +25,7 @@ const MenuPage = () => {
     fetchMenuDetails()
       .then((response) => {
         setMenus(response as MenuProps[]);
+        setFilteredMenus(response as MenuProps[]);
         setIsLoading(false);
       })
       .catch(console.error);
