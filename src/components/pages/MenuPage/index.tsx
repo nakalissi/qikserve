@@ -19,17 +19,23 @@ const MenuPage = () => {
   const [menus, setMenus] = useState<MenuProps[]>([]);
   const [modalContent, setModalContent] = useState<ItemProps | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredMenus, setFilteredMenus] = useState<MenuProps[]>([]);
 
   useEffect(() => {
     fetchMenuDetails()
       .then((response) => {
         setMenus(response as MenuProps[]);
+        setIsLoading(false);
       })
-      .finally(() => setIsLoading(false));
+      .catch(console.error);
   }, []);
 
   function handleSearch(value: string): void {
     setSearchTerm(value);
+    const filtered = menus.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredMenus(filtered);
   }
 
   function handleClose(): void {
@@ -42,13 +48,6 @@ const MenuPage = () => {
     setModalContent(content);
   }
 
-  const filteredMenus = menus.map((menu) => ({
-    ...menu,
-    items: menu.items?.filter((item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ),
-  }));
-
   return (
     <>
       <Container maxWidth="lg">
@@ -59,7 +58,7 @@ const MenuPage = () => {
           <Grid size={{ xs: 12, md: 8 }}>
             <Card sx={{ boxShadow: "0 0 6px rgba(0, 0, 0, 0.1)" }}>
               <CardContent>
-                {isLoading ? (
+                {isLoading && !menus.length && !filteredMenus.length ? (
                   <Box
                     sx={{
                       display: "flex",

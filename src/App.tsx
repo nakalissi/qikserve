@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Theme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { useDispatch } from 'react-redux';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-import Routes from './routes';
-import createDynamicTheme from './theme';
-import { fetchRestaurantDetails } from './services/api';
-import { setup } from './redux/settings';
+import React, { useState, useEffect } from "react";
+import { Theme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { useDispatch } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import Routes from "./routes";
+import createDynamicTheme from "./theme";
+import { fetchRestaurantDetails } from "./services/api";
+import { setup } from "./redux/settings";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -15,11 +15,14 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const loadTheme = async () => {
-      const data = await fetchRestaurantDetails();
-      const dynamicTheme = createDynamicTheme(data);
-      setTheme(dynamicTheme);
-      dispatch(setup(data));
-      document.title = data.name;
+      fetchRestaurantDetails("9")
+        .then((response) => {
+          const dynamicTheme = createDynamicTheme(response);
+          setTheme(dynamicTheme);
+          dispatch(setup(response));
+          document.title = response.name;
+        })
+        .catch(console.error);
     };
     loadTheme();
   }, [dispatch]);
@@ -42,7 +45,7 @@ const App: React.FC = () => {
       <CssBaseline />
       <Routes />
     </ThemeProvider>
-  )
+  );
 };
 
 export default App;

@@ -17,11 +17,11 @@ const createDynamicTheme = (theme: any): Theme => {
   return createTheme({
     palette: {
       primary: {
-        main: theme.webSettings.primaryColour || '#4F372F',
+        main: theme?.webSettings?.primaryColour || '#4F372F',
       },
       secondary: {
         light: '#F8F9FA',
-        main: theme.webSettings.backgroundColour || '#ffffff',
+        main: theme?.webSettings?.backgroundColour || '#ffffff',
       },
       background: {
         paper: '#F8F9FA',
@@ -29,7 +29,7 @@ const createDynamicTheme = (theme: any): Theme => {
       },
     },
     banner: {
-      image: theme.webSettings.bannerImage,
+      image: theme?.webSettings?.bannerImage,
     },
     typography: {
       allVariants: {

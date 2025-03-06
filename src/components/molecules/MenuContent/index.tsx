@@ -34,19 +34,20 @@ const MenuContent: React.FC<{
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "row" }}>
-        {menus.map(({ id, name, images }, index) => (
-          <MenuBarButton
-            id={id}
-            key={index}
-            isActive={session === id}
-            name={name}
-            image={images?.[0]?.image}
-            handleChange={handleChange}
-          />
-        ))}
+        {menus &&
+          menus?.map(({ id, name, images }, index) => (
+            <MenuBarButton
+              id={id}
+              key={index}
+              isActive={session === id}
+              name={name}
+              image={images?.[0]?.image}
+              handleChange={handleChange}
+            />
+          ))}
       </Box>
       <Box>
-        {filteredMenus.map(({ id, name, items }, index) => (
+        {filteredMenus?.map(({ id, name, items }, index) => (
           <Accordion
             id={id.toString()}
             key={index}
