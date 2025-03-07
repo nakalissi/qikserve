@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/challenge/:path",
-      "destination": "https://cdn-dev.preoday.com/challenge/:path"
+      "source": "/challenge/:match*",
+      "destination": "https://cdn-dev.preoday.com/challenge/:match*"
     }
   ]
 }
